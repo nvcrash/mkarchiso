@@ -1,0 +1,9 @@
+ISO?=arch_custom.iso
+ARCH_RELEASE?=201507
+
+#HOME_ROOT_SYMBOLIC_MODE?=COPY
+#ROOT_CFG_PRESERVE_SYMBOLIC?=
+
+
+CUSTOM_DATA?=$(current_dir)/custom_data
+HOME_ROOT_DIR=$(CUSTOM_DATA)/home_root
