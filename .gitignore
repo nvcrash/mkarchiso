@@ -8,13 +8,4 @@
 /mklists/vars.mk~
 /arch_custom.iso
 /arch_custom/
-/custom_data/home_root/.Xauthority
-/custom_data/home_root/.Xdefaults
-/custom_data/home_root/.emacs
-/custom_data/home_root/.emacs.d/ac-comphist.dat
-/custom_data/home_root/.emacs.d/config
-/custom_data/home_root/.emacs.d/elpa
-/custom_data/home_root/.emacs.d/snippets
-/custom_data/home_root/.emacs.d/yasnippets-latex
-/custom_data/home_root/.i3
-/custom_data/home_root/.xinitrc
+/custom_data/
