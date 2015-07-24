@@ -37,14 +37,20 @@ ARCH_PKG_INIT=pacman-key --init && pacman-key --populate archlinux
 ARCH_PKGINSTALL=pacman -Sy
 
 ARCH_MAKE_ROOT=\
-mkdir -p $(1)/arch/$(2)/$(1)_$(2)_root \
-ln -sf $(1)/arch/$(2)/$(1)_$(2)_root $(1)_$(2)_root \
-cd $(1)/arch/$(2) && ${UNSQUASHFS} airootfs.sfs \
-sudo mount -o loop $(1)/arch/$(2)/squashfs-root/airootfs.img $(1)/arch/$(2)/$(1)_$(2)_root
+cd $(current_dir) \
+&& mkdir -p $(current_dir)/$(1)/arch/$(2)/$(1)_$(2)_root \
+&& cd $(1)/arch/$(2) && ${UNSQUASHFS} airootfs.sfs \
+; MOUNTPOINT=$(current_dir)/$(1)/arch/$(2)/$(1)_$(2)_root \
+; IMAGEPATH=$(current_dir)/$(1)/arch/$(2)/squashfs-root/airootfs.img \
+&& $(call REMOUNT,$$IMAGEPATH,$$MOUNTPOINT) \
+&& ln -sft $(current_dir) $$MOUNTPOINT
 
-ARCH_LOCK=mv $(1)/pkglist.txt $(current_dir)/arch/pkglist.$(2).txt; \
-cd $(1)/arch/$(2) \
-&& umount $(1) \
+ARCH_LOCK=\
+cd $(current_dir)/$(1) \
+&& cd `pwd -P` \
+&& sudo mv $(current_dir)/$(1)/pkglist.txt ../pkglist.$(2).txt; \
+cd $${PWD}/.. \
+&& sudo umount $(1) \
 && $(RMDIR) $(1) \
 && rm airootfs.sfs \
 && ${MKSQUASHFS} squashfs-root airootfs.sfs \
@@ -59,10 +65,10 @@ arch_%_i386_root: arch_%
 	$(call ARCH_MAKE_ROOT,$^,i386)
 
 arch_%.lock64: arch_%_x86_64_root
-	$(call ARCH_LOCK, $^, x86_64)
+	$(call ARCH_LOCK,$^,x86_64)
 
 arch_%.lock32: arch_%_i386_root
-	$(call ARCH_LOCK, $^, x86_64)
+	$(call ARCH_LOCK,$^,x86_64)
 
 
 # arch_%.clean64: arch_%
