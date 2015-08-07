@@ -1,0 +1,1 @@
+FIND_MOUNT_POINT=lsblk | grep $(1)

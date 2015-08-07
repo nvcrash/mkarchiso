@@ -1,7 +1,7 @@
-AC_INIT(src/main)
-AM_INIT_AUTOMAKE([mkarchiso], [0.1.0])
-PACKAGE=
-VERSION=
+AC_INIT([mkarchiso],[0.1.0])
+AC_CONFIG_SRCDIR([src/])
+AM_INIT_AUTOMAKE([1.11 -Wno-portability])
+
 
 #INTI_REQUIRED_VERSION=1.0.7
 AC_PREREQ(1.11.6)

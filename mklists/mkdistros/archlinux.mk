@@ -50,7 +50,7 @@ cd $(current_dir)/$(1) \
 && cd `pwd -P` \
 && sudo mv $(current_dir)/$(1)/pkglist.txt ../pkglist.$(2).txt; \
 cd $${PWD}/.. \
-&& sudo umount $(1) \
+&& $(call UMOUNT,$(1)) \
 && $(RMDIR) $(1) \
 && rm airootfs.sfs \
 && ${MKSQUASHFS} squashfs-root airootfs.sfs \
