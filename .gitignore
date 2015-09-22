@@ -10,3 +10,9 @@
 /arch_custom/
 /custom_data/
 /mklists/mkdistros/.#archlinux.mk
+/configure
+/config.status
+/autoscan.log
+/config.log
+/missing
+/Makefile
