@@ -36,25 +36,24 @@ arch_%.iso: arch_%
 ARCH_PKG_INIT=pacman-key --init && pacman-key --populate archlinux
 ARCH_PKGINSTALL=pacman -Sy
 
-ARCH_MAKE_ROOT=\
-cd $(current_dir) \
-&& mkdir -p $(current_dir)/$(1)/arch/$(2)/$(1)_$(2)_root \
-&& cd $(1)/arch/$(2) && ${UNSQUASHFS} airootfs.sfs \
-; MOUNTPOINT=$(current_dir)/$(1)/arch/$(2)/$(1)_$(2)_root \
-; IMAGEPATH=$(current_dir)/$(1)/arch/$(2)/squashfs-root/airootfs.img \
+ARCH_MAKE_ROOT= \
+MOUNTPOINT=$(current_dir)/$(1)/arch/$(2)/$(1)_$(2)_root; \
+IMAGEPATH=$(current_dir)/$(1)/arch/$(2)/squashfs-root/airootfs.img; \
+&& $(MKDIRP) $$MOUNTPOINT \
+&& cd $(current_dir)/$(1)/arch/$(2) && ${UNSQUASHFS} airootfs.sfs \
 && $(call REMOUNT,$$IMAGEPATH,$$MOUNTPOINT) \
-&& ln -sft $(current_dir) $$MOUNTPOINT
+&& $(LNSFT) $(current_dir) $$MOUNTPOINT
 
 ARCH_LOCK=\
 cd $(current_dir)/$(1) \
-&& cd `pwd -P` \
-&& sudo mv $(current_dir)/$(1)/pkglist.txt ../pkglist.$(2).txt; \
+&& MOUNTPOINT=`pwd -P` \
+&& sudo mv $$MOUNTPOINT/pkglist.txt $$MOUNTPOINT/../pkglist.$(2).txt; \
 cd $${PWD}/.. \
-&& sudo umount $(1) \
-&& $(RMDIR) $(1) \
-&& rm airootfs.sfs \
+&& $(call UMOUNT_IMG, $(1)) \
+&& $(RMDIR) $$MOUNTPOINT\
+&& rm airootfs.sfs | echo) \
 && ${MKSQUASHFS} squashfs-root airootfs.sfs \
-&& rm -r squashfs-root \
+&& ${RMREC} squashfs-root \
 && md5sum airootfs.sfs > airootfs.md5
 
 
@@ -71,14 +70,4 @@ arch_%.lock32: arch_%_i386_root
 	$(call ARCH_LOCK,$^,x86_64)
 
 
-# arch_%.clean64: arch_%
-# 	@${RM} $(current_dir)/arch_%_X86_64_root/root/.bash_history 2> /dev/null;echo -n
-# 	@${RM} $(current_dir)/arch_%_X86_64_root/root/.zsh_history  2> /dev/null;echo -n
-
-
-# arch_%.lock64: arch_%_X86_64_root
-# 	mv $(current_dir)/arch_%_X86_64_root/pkglist.txt $^/arch/pkglist.x86_64.txt; \
-# 	cd $^/arch/x86_64 && umount arch_%_X86_64_root && rm airootfs.sfs && ${MKSQUASHFS} squashfs-root airootfs.sfs && $(RMDIR) $^ && rm -r squashfs-root && md5sum airootfs.sfs > airootfs.md5
-
-
-.PHONY: arch_%.clean64
+.PHONY: arch_%.clean64 arch_%.lock64 arch_%.lock32

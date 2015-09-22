@@ -22,12 +22,9 @@ CHROOTSH?=/bin/bash
 CHROOT?=/usr/bin/arch-chroot
 MKSQUASHFS?=/usr/bin/mksquashfs
 UNSQUASHFS?=/usr/bin/unsquashfs
-RMDIR?=/bin/rmdir
-RMREC?=/bin/rm -rf
 MKDIRP?= /bin/mkdir -p
 MOUNTLOOP?=/bin/mount -o loop
-RM?=/bin/rm -v
 RSYNC?=/usr/bin/rsync
-
+LNSFT=ln -sft
 SYNCDIRS?=${RSYNC} -ua
 SYNCDIRS_LINK_COPY= ${RSYNC} -ua
